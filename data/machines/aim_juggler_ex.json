@@ -1,0 +1,19 @@
+{
+  "id": "aim_juggler_ex",
+  "display_name": "SアイムジャグラーEX / ネオアイムジャグラーEX",
+  "grape_pattern": "flat_except_6",
+  "key_metrics": ["reg_solo", "br_ratio"],
+  "big_payout": 252,
+  "reg_payout": 96,
+  "grape_payout": 8,
+  "cherry_payout": 2,
+  "settings": {
+    "1": { "big": 273.1, "reg": 439.8, "bonus_total": 168.5, "big_solo": 389.2, "reg_solo": 633.4, "grape": 6.02 },
+    "2": { "big": 269.7, "reg": 399.6, "bonus_total": 161.0, "big_solo": 381.5, "reg_solo": 568.7, "grape": 6.02 },
+    "3": { "big": 269.7, "reg": 331.0, "bonus_total": 148.6, "big_solo": 381.5, "reg_solo": 471.4, "grape": 6.02 },
+    "4": { "big": 259.0, "reg": 315.1, "bonus_total": 142.2, "big_solo": 370.0, "reg_solo": 446.3, "grape": 6.02 },
+    "5": { "big": 259.0, "reg": 255.0, "bonus_total": 128.5, "big_solo": 370.0, "reg_solo": 361.7, "grape": 6.02 },
+    "6": { "big": 255.0, "reg": 255.0, "bonus_total": 127.5, "big_solo": 361.7, "reg_solo": 361.7, "grape": 5.78 }
+  },
+  "source": "juggler7.com / 北電子公式値 (ボーナス確率・BIG獲得枚数252枚はメーカー公式確定値。ぶどう値はガリぞう実戦値(nana-press引用)。確度:最高)"
+}

@@ -1,0 +1,19 @@
+{
+  "id": "myjuggler5",
+  "display_name": "Sマイジャグラー5",
+  "grape_pattern": "graduated",
+  "key_metrics": ["bonus_total", "reg_solo", "br_ratio", "grape"],
+  "big_payout": 240,
+  "reg_payout": 96,
+  "grape_payout": 8,
+  "cherry_payout": 2,
+  "settings": {
+    "1": { "big": 273.1, "reg": 409.6, "bonus_total": 163.8, "reg_solo": 655.36, "cherry_reg": 38.1, "grape": 5.90 },
+    "2": { "big": 270.8, "reg": 385.5, "bonus_total": 159.1, "reg_solo": 595.78, "cherry_reg": 38.1, "grape": 5.85 },
+    "3": { "big": 266.4, "reg": 336.1, "bonus_total": 148.6, "reg_solo": 496.48, "cherry_reg": 36.82, "grape": 5.80 },
+    "4": { "big": 254.0, "reg": 290.0, "bonus_total": 135.4, "reg_solo": 404.54, "cherry_reg": 35.62, "grape": 5.78 },
+    "5": { "big": 240.1, "reg": 268.6, "bonus_total": 126.8, "reg_solo": 390.10, "cherry_reg": 35.62, "grape": 5.76 },
+    "6": { "big": 229.1, "reg": 229.1, "bonus_total": 114.6, "reg_solo": 327.68, "cherry_reg": 35.62, "grape": 5.66 }
+  },
+  "source": "juggler7.com (メーカー解析値準拠、確度:高)"
+}

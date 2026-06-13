@@ -1,0 +1,19 @@
+{
+  "id": "gogo_juggler3",
+  "display_name": "Sゴーゴージャグラー3",
+  "grape_pattern": "graduated_small",
+  "key_metrics": ["bonus_total", "reg_solo", "br_ratio", "grape"],
+  "big_payout": 240,
+  "reg_payout": 96,
+  "grape_payout": 8,
+  "cherry_payout": 2,
+  "settings": {
+    "1": { "big": 259.0, "reg": 354.2, "bonus_total": 149.6, "big_solo": 379.1, "reg_solo": 472.3, "grape": 6.25, "cherry": 33.56 },
+    "2": { "big": 258.0, "reg": 332.7, "bonus_total": 145.3, "big_solo": 376.9, "reg_solo": 447.4, "grape": 6.20, "cherry": 33.47 },
+    "3": { "big": 257.0, "reg": 306.2, "bonus_total": 139.7, "big_solo": 378.6, "reg_solo": 417.8, "grape": 6.15, "cherry": 33.32 },
+    "4": { "big": 254.0, "reg": 268.6, "bonus_total": 130.5, "big_solo": 378.7, "reg_solo": 362.9, "grape": 6.07, "cherry": 33.15 },
+    "5": { "big": 247.3, "reg": 247.3, "bonus_total": 123.7, "big_solo": 369.5, "reg_solo": 331.0, "grape": 6.00, "cherry": 33.10 },
+    "6": { "big": 234.9, "reg": 234.9, "bonus_total": 117.4, "big_solo": 352.4, "reg_solo": 317.2, "grape": 5.92, "cherry": 32.97 }
+  },
+  "source": "juggler7.com (ボーナス確率はメーカー解析値、単独ボーナスは5号機比率推定値、ぶどう/チェリーはガリぞう実戦値。確度:高)"
+}

@@ -1,0 +1,46 @@
+@import "tailwindcss";
+
+:root {
+  --background: #0a0a0f;
+  --foreground: #e8e8f0;
+  --gogo-red: #ff2d55;
+  --gogo-yellow: #ffd700;
+  --gogo-green: #39ff14;
+  --gogo-blue: #00d4ff;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+.gogo-glow-red {
+  box-shadow: 0 0 10px #ff2d55, 0 0 20px #ff2d5566;
+}
+.gogo-glow-yellow {
+  box-shadow: 0 0 10px #ffd700, 0 0 20px #ffd70066;
+}
+.gogo-glow-green {
+  box-shadow: 0 0 10px #39ff14, 0 0 20px #39ff1466;
+}
+
+@keyframes gogoPulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.6; }
+}
+.gogo-pulse {
+  animation: gogoPulse 1.5s ease-in-out infinite;
+}
+
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  opacity: 1;
+}

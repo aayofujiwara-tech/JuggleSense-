@@ -1,0 +1,19 @@
+{
+  "id": "ultra_miracle_juggler",
+  "display_name": "Sウルトラミラクルジャグラー",
+  "grape_pattern": "graduated",
+  "key_metrics": ["reg_solo", "br_ratio", "grape"],
+  "big_payout": 240,
+  "reg_payout": 96,
+  "grape_payout": 8,
+  "cherry_payout": 2,
+  "settings": {
+    "1": { "big": 267.5, "reg": 425.6, "bonus_total": 164.3, "big_solo": 333.65, "reg_solo": 595.84, "cherry_reg": 1489.6, "grape": 5.93, "cherry": 35.1 },
+    "2": { "big": 261.1, "reg": 402.1, "bonus_total": 158.3, "big_solo": 333.32, "reg_solo": 545.71, "cherry_reg": 1527.99, "grape": 5.93, "cherry": 35.0 },
+    "3": { "big": 256.0, "reg": 350.5, "bonus_total": 147.9, "big_solo": 328.76, "reg_solo": 489.59, "cherry_reg": 1233.75, "grape": 5.93, "cherry": 34.8 },
+    "4": { "big": 242.7, "reg": 322.8, "bonus_total": 138.6, "big_solo": 310.66, "reg_solo": 436.46, "cherry_reg": 1239.55, "grape": 5.93, "cherry": 34.7 },
+    "5": { "big": 233.2, "reg": 297.9, "bonus_total": 130.8, "big_solo": 304.33, "reg_solo": 415.90, "cherry_reg": 1049.97, "grape": 5.87, "cherry": 33.5 },
+    "6": { "big": 216.3, "reg": 277.7, "bonus_total": 121.6, "big_solo": 281.78, "reg_solo": 379.91, "cherry_reg": 1032.21, "grape": 5.81, "cherry": 33.0 }
+  },
+  "source": "juggler7.com (ボーナス確率はメーカー解析値、ぶどう/チェリー/単独・重複はガリぞう実戦値。確度:高)"
+}
