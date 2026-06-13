@@ -14,12 +14,14 @@ function NumInput({
   onChange,
   placeholder,
   hint,
+  description,
 }: {
   label: string;
   value: string;
   onChange: (v: string) => void;
   placeholder?: string;
   hint?: string;
+  description?: string;
 }) {
   return (
     <div className="flex flex-col gap-1">
@@ -35,6 +37,9 @@ function NumInput({
         placeholder={placeholder ?? "0"}
         className="w-full rounded-lg bg-[#0d0d18] border border-[#00d4ff]/20 px-3 py-3 text-base font-mono text-[#00d4ff] placeholder:text-[#e8e8f0]/20 focus:outline-none focus:border-[#00d4ff]/60 transition-colors"
       />
+      {description && (
+        <p className="text-[10px] text-[#e8e8f0]/30">{description}</p>
+      )}
     </div>
   );
 }
@@ -55,7 +60,7 @@ export function ReverseCalcForm({ machine, onSubmit }: Props) {
     if (useNetCoins) return Number(netCoins) || 0;
     const inv = Number(investment) || 0;
     const pay = Number(payout) || 0;
-    return pay - inv * 3;
+    return pay - inv / 20;
   }
 
   function handleSubmit(e: React.FormEvent) {
@@ -144,8 +149,20 @@ export function ReverseCalcForm({ machine, onSubmit }: Props) {
           />
         ) : (
           <div className="grid grid-cols-2 gap-3">
-            <NumInput label="投資（千円）" value={investment} onChange={setInvestment} hint="1000円単位" />
-            <NumInput label="清算枚数" value={payout} onChange={setPayout} />
+            <NumInput
+              label="投資額（円）"
+              value={investment}
+              onChange={setInvestment}
+              placeholder="例: 5000"
+              description="スロットに使った金額の合計"
+            />
+            <NumInput
+              label="終了時の手持ちメダル数"
+              value={payout}
+              onChange={setPayout}
+              placeholder="例: 300"
+              description="現在カウンターに表示されているメダル数（クレジット表示分も含む）"
+            />
           </div>
         )}
       </div>
