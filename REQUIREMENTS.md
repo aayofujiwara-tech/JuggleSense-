@@ -353,8 +353,35 @@ function judge(machine, input) {
 
 ### 3.1.1 UI表示要件の追加
 
-- `JudgeResult.tsx` には「総回転数が少ない場合(目安: 1000G未満)は判定の信頼度が低くなります」という注記を表示する。
 - 表示文言は「一致度」ではなく「設定◯の可能性: ◯%」という確率表現に統一する。
+- **拮抗警告**: 上位2設定の確率差が小さい、または最大確率が低い場合に「判定が拮抗しています」旨を表示する。
+
+```javascript
+const sorted = [...results].sort((a, b) => b.probability - a.probability);
+const top1 = sorted[0].probability;
+const top2 = sorted[1].probability;
+const isContested = (top1 - top2 < 0.15) || (top1 < 0.30);
+// isContestedがtrueの場合「判定が拮抗しています。回転数を増やすか、
+// ぶどう・単独REGなどの指標を追加すると精度が上がります」と表示
+```
+
+- **回転数別ガイダンス**: 固定の「◯G未満は警告」ではなく、`totalGames`に応じて段階的な案内文を表示する。具体的な閾値を断定的に示すのではなく、目安として柔らかく案内する。
+
+```javascript
+function getReliabilityNote(totalGames) {
+  if (totalGames < 1000) {
+    return "回転数が少ないため、現時点の判定はあくまで参考値です。データの蓄積とともに精度が上がります。";
+  } else if (totalGames < 3000) {
+    return "傾向が見え始める段階ですが、断定的な判断はまだ難しい回転数です。";
+  } else if (totalGames < 6000) {
+    return "ぶどうや単独REGなど複数の指標を入力すると、この回転数でも判定精度が上がります。";
+  } else {
+    return "十分な回転数のため、合算確率を含めた判定の信頼度が高まっています。";
+  }
+}
+```
+
+- 拮抗警告と回転数別ガイダンスは併記可能(両方表示してよい)。拮抗警告は「結果がまだ割れている」ことを示し、ガイダンスは「次に何を入力・蓄積すればよいか」を示す、という役割分担にする。
 
 
 ### 3.2 ぶどう/チェリー確率逆算ロジック

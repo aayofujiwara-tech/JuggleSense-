@@ -36,6 +36,18 @@ function formatRate(metric: string, value: number): string {
   return `1/${value.toFixed(1)}`;
 }
 
+function getReliabilityNote(totalGames: number): string {
+  if (totalGames < 1000) {
+    return "回転数が少ないため、現時点の判定はあくまで参考値です。データの蓄積とともに精度が上がります。";
+  } else if (totalGames < 3000) {
+    return "傾向が見え始める段階ですが、断定的な判断はまだ難しい回転数です。";
+  } else if (totalGames < 6000) {
+    return "ぶどうや単独REGなど複数の指標を入力すると、この回転数でも判定精度が上がります。";
+  } else {
+    return "十分な回転数のため、合算確率を含めた判定の信頼度が高まっています。";
+  }
+}
+
 export function JudgeResultView({
   results,
   machine,
@@ -47,12 +59,26 @@ export function JudgeResultView({
 }) {
   const sorted = [...results].sort((a, b) => Number(a.setting) - Number(b.setting));
   const best = results[0];
+  const second = results[1];
+  const isContested = (best.probability - second.probability < 0.15) || best.probability < 0.30;
 
   return (
     <div className="space-y-4">
-      {totalGames < 1000 && (
-        <div className="p-3 rounded-lg bg-[#ff2d55]/10 border border-[#ff2d55]/30 text-xs text-[#ff2d55]/80">
-          総回転数が少ない場合（目安: 1000G未満）は判定の信頼度が低くなります
+      <div className={`p-3 rounded-lg text-xs border ${
+        totalGames < 1000
+          ? "bg-[#ff2d55]/10 border-[#ff2d55]/30 text-[#ff2d55]/80"
+          : totalGames < 3000
+          ? "bg-[#ffd700]/10 border-[#ffd700]/30 text-[#ffd700]/70"
+          : totalGames < 6000
+          ? "bg-[#00d4ff]/10 border-[#00d4ff]/30 text-[#00d4ff]/70"
+          : "bg-[#39ff14]/10 border-[#39ff14]/30 text-[#39ff14]/70"
+      }`}>
+        {getReliabilityNote(totalGames)}
+      </div>
+
+      {isContested && (
+        <div className="p-3 rounded-lg bg-[#ffd700]/10 border border-[#ffd700]/30 text-xs text-[#ffd700]/80">
+          判定が拮抗しています。回転数を増やすか、ぶどう・単独REGなどの指標を追加すると精度が上がります。
         </div>
       )}
 
