@@ -1,36 +1,77 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# JuggleSense — ジャグラー設定判別ツール
 
-## Getting Started
+ジャグラーシリーズ全機種に対応した設定判別・ぶどう確率逆算ツールです。  
+実機データを入力するだけで、二項分布に基づく統計的な設定推定と、差枚数からのぶどう確率逆算が行えます。
 
-First, run the development server:
+## 対応機種
+
+| 機種名 | ID |
+|---|---|
+| Sマイジャグラー5 | myjuggler5 |
+| Sファンキージャグラー2 | funky_juggler2 |
+| SハッピージャグラーV3 | happy_juggler_v3 |
+| Sゴーゴージャグラー3 | gogo_juggler3 |
+| SジャグラーガールズSS | juggler_girls_ss |
+| Sウルトラミラクルジャグラー | ultra_miracle_juggler |
+| SアイムジャグラーEX | aim_juggler_ex |
+| ネオアイムジャグラーEX | aim_juggler_ex（共通データ） |
+
+## 使い方
+
+### 設定判別
+
+1. トップページから機種を選択
+2. 総回転数・BIG回数・REG回数を入力
+3. 機種に応じて単独REG回数・チェリー重複REG回数・ぶどう回数を追加入力（任意）
+4. 「設定を判別する」を押すと、各設定の可能性（%）をバーチャートで表示
+
+### ぶどう確率逆算
+
+1. 機種選択後、「ぶどう逆算」タブを開く
+2. 逆算モードを選択
+   - **モード1（高精度）**: チェリー回数を入力して精度の高い逆算を実施
+   - **モード2（簡易）**: チェリー回数不要、理論値から推定
+3. 総回転数・BIG/REG回数・差枚数を入力
+   - 差枚数は直接入力か、投資額（円）＋終了時の手持ちメダル数から自動計算（1枚20円換算）
+4. 「ぶどう確率を逆算する」を押すと、逆算値と設定別比較テーブルを表示
+
+## データソース・確度
+
+| 機種 | 確度 | 出典 |
+|---|---|---|
+| Sマイジャグラー5 | 高 | juggler7.com（メーカー解析値） |
+| Sファンキージャグラー2 | 高 | note/jugglertopics（アプリ実測値） |
+| SハッピージャグラーV3 | 中〜高 | juggler7.com（5号機比率推定＋アプリ実戦300万G） |
+| Sゴーゴージャグラー3 | 高 | juggler7.com（メーカー解析値＋ガリぞう実戦値） |
+| SジャグラーガールズSS | 高 | juggler7.com / note（pachiprotool） |
+| Sウルトラミラクルジャグラー | 高 | juggler7.com（メーカー解析値＋ガリぞう実戦値） |
+| SアイムジャグラーEX / ネオアイムEX | 最高 | juggler7.com（北電子公式値含む、BIG獲得枚数252枚は確定値） |
+
+## 技術構成
+
+- **フレームワーク**: Next.js 16 (App Router)
+- **言語**: TypeScript
+- **スタイリング**: Tailwind CSS
+- **デプロイ**: Vercel
+- **判別ロジック**: 二項分布の対数尤度に基づくベイズ的推定（softmax正規化）
+
+機種データは `/data/machines/*.json` に外部化されており、新機種の追加はJSONファイルの追加のみで対応可能です。
+
+## ローカル開発
 
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+`http://localhost:3000` でアクセスできます。
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```bash
+npm run build   # 本番ビルド確認
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## 免責事項
 
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+本ツールは過去の解析データ・実戦データに基づく統計的な参考情報を提供するものであり、実際の設定や勝敗を保証するものではありません。  
+本ツールの結果を理由とした行動・判断は利用者ご自身の責任で行ってください。  
+データの正確性には配慮していますが、機種仕様の変更等により実際の値と異なる場合があります。

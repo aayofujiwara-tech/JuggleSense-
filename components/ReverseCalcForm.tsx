@@ -15,6 +15,7 @@ function NumInput({
   placeholder,
   hint,
   description,
+  min,
 }: {
   label: string;
   value: string;
@@ -22,6 +23,7 @@ function NumInput({
   placeholder?: string;
   hint?: string;
   description?: string;
+  min?: number;
 }) {
   return (
     <div className="flex flex-col gap-1">
@@ -32,6 +34,7 @@ function NumInput({
       <input
         type="number"
         inputMode="numeric"
+        min={min}
         value={value}
         onChange={(e) => onChange(e.target.value)}
         placeholder={placeholder ?? "0"}
@@ -55,6 +58,7 @@ export function ReverseCalcForm({ machine, onSubmit }: Props) {
   const [cherryMode, setCherryMode] = useState<"on" | "off">("on");
   const [cherryCount, setCherryCount] = useState("");
   const [useNetCoins, setUseNetCoins] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   function calcNetCoins(): number {
     if (useNetCoins) return Number(netCoins) || 0;
@@ -65,10 +69,16 @@ export function ReverseCalcForm({ machine, onSubmit }: Props) {
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
+    const games = Number(totalGames) || 0;
+    if (games <= 0) {
+      setError("総回転数を入力してください");
+      return;
+    }
+    setError(null);
     const nc = calcNetCoins();
     onSubmit({
       mode,
-      totalGames: Number(totalGames) || 0,
+      totalGames: games,
       bigCount: Number(bigCount) || 0,
       regCount: Number(regCount) || 0,
       netCoins: nc,
@@ -105,10 +115,10 @@ export function ReverseCalcForm({ machine, onSubmit }: Props) {
       </div>
 
       <div className="space-y-3">
-        <NumInput label="総回転数" value={totalGames} onChange={setTotalGames} placeholder="例: 3000" />
+        <NumInput label="総回転数" value={totalGames} onChange={setTotalGames} placeholder="例: 3000" min={0} />
         <div className="grid grid-cols-2 gap-3">
-          <NumInput label="BIG回数" value={bigCount} onChange={setBigCount} />
-          <NumInput label="REG回数" value={regCount} onChange={setRegCount} />
+          <NumInput label="BIG回数" value={bigCount} onChange={setBigCount} min={0} />
+          <NumInput label="REG回数" value={regCount} onChange={setRegCount} min={0} />
         </div>
       </div>
 
@@ -155,6 +165,7 @@ export function ReverseCalcForm({ machine, onSubmit }: Props) {
               onChange={setInvestment}
               placeholder="例: 5000"
               description="スロットに使った金額の合計"
+              min={0}
             />
             <NumInput
               label="終了時の手持ちメダル数"
@@ -162,6 +173,7 @@ export function ReverseCalcForm({ machine, onSubmit }: Props) {
               onChange={setPayout}
               placeholder="例: 300"
               description="現在カウンターに表示されているメダル数（クレジット表示分も含む）"
+              min={0}
             />
           </div>
         )}
@@ -191,13 +203,18 @@ export function ReverseCalcForm({ machine, onSubmit }: Props) {
       </div>
 
       {mode === 1 && (
-        <NumInput label="チェリー回数" value={cherryCount} onChange={setCherryCount} />
+        <NumInput label="チェリー回数" value={cherryCount} onChange={setCherryCount} min={0} />
       )}
 
       <div className="text-xs text-[#e8e8f0]/30 p-2 rounded bg-[#0d0d18]">
         {machine.display_name} / BIG獲得: {machine.big_payout}枚 / REG獲得: {machine.reg_payout}枚
       </div>
 
+      {error && (
+        <p className="text-xs text-[#ff2d55] px-3 py-2 rounded-lg bg-[#1a0d0d] border border-[#ff2d55]/30">
+          {error}
+        </p>
+      )}
       <button
         type="submit"
         className="w-full py-4 rounded-xl font-bold text-base bg-[#00d4ff] text-[#0a0a0f] transition-all active:scale-95 hover:bg-[#33ddff]"

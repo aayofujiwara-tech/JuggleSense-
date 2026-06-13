@@ -23,6 +23,7 @@ function logCombination(n: number, k: number): number {
 
 function logBinomialPMF(k: number, n: number, p: number): number {
   if (p <= 0 || p >= 1) return -Infinity;
+  if (k < 0 || k > n) return -Infinity;
   return logCombination(n, k) + k * Math.log(p) + (n - k) * Math.log(1 - p);
 }
 
@@ -76,6 +77,22 @@ export function judge(machine: MachineSpec, input: JudgeInput): JudgeResult[] {
   });
 
   const maxLogL = Math.max(...logLikelihoods.map((r) => r.logL));
+
+  // 全設定が -Infinity になった場合（不正入力等）は均等確率を返す
+  if (!isFinite(maxLogL)) {
+    return SETTINGS.map((s) => {
+      const spec = machine.settings[s];
+      return {
+        setting: s,
+        probability: 1 / SETTINGS.length,
+        brRatio: spec.big != null && spec.big > 0 && spec.reg != null && spec.reg > 0
+          ? spec.reg / spec.big
+          : undefined,
+        actualValues,
+      };
+    });
+  }
+
   const expScores = logLikelihoods.map((r) => Math.exp(r.logL - maxLogL));
   const sumExp = expScores.reduce((a, b) => a + b, 0);
 

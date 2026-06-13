@@ -40,8 +40,12 @@ export default function RootLayout({
         <main className="flex-1 max-w-4xl w-full mx-auto px-4 py-6">
           {children}
         </main>
-        <footer className="border-t border-[#ffd700]/10 text-center text-xs text-[#e8e8f0]/30 py-4">
-          データはあくまで参考値です。実際の設定を保証するものではありません。
+        <footer className="border-t border-[#ffd700]/10 text-center py-6 px-4">
+          <p className="text-[10px] text-[#e8e8f0]/25 leading-relaxed max-w-2xl mx-auto">
+            本ツールは過去の解析データ・実戦データに基づく統計的な参考情報を提供するものであり、実際の設定や勝敗を保証するものではありません。
+            本ツールの結果を理由とした行動・判断は利用者ご自身の責任で行ってください。
+            データの正確性には配慮していますが、機種仕様の変更等により実際の値と異なる場合があります。
+          </p>
         </footer>
       </body>
     </html>

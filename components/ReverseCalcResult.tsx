@@ -31,15 +31,27 @@ export function ReverseCalcResultView({
 
   return (
     <div className="space-y-4">
+      {result.grapeRate === 0 && (
+        <div className="text-xs text-[#ff2d55]/80 p-3 rounded-lg bg-[#1a0d0d] border border-[#ff2d55]/30">
+          ぶどう払出が0以下になりました。ボーナス回数・差枚数・回転数の入力を確認してください。
+        </div>
+      )}
+
       <div className="grid grid-cols-2 gap-3">
         <div className="p-4 rounded-xl border border-[#39ff14]/30 bg-[#0d1a0d]">
           <p className="text-xs text-[#e8e8f0]/50 mb-1">ぶどう確率</p>
-          <p className="text-2xl font-bold font-mono text-[#39ff14]">
-            1/{result.grapeRate.toFixed(2)}
-          </p>
-          <p className="text-[10px] text-[#e8e8f0]/30 mt-1">
-            {result.grapeCount.toFixed(0)}回
-          </p>
+          {result.grapeRate > 0 ? (
+            <>
+              <p className="text-2xl font-bold font-mono text-[#39ff14]">
+                1/{result.grapeRate.toFixed(2)}
+              </p>
+              <p className="text-[10px] text-[#e8e8f0]/30 mt-1">
+                {result.grapeCount.toFixed(0)}回
+              </p>
+            </>
+          ) : (
+            <p className="text-lg font-bold text-[#ff2d55]/70 mt-1">計算不能</p>
+          )}
         </div>
         <div className="p-4 rounded-xl border border-[#ff2d55]/30 bg-[#1a0d0d]">
           <p className="text-xs text-[#e8e8f0]/50 mb-1">チェリー確率</p>
@@ -58,8 +70,19 @@ export function ReverseCalcResultView({
           <div className="space-y-2">
             {SETTINGS.map((s) => {
               const g = machine.settings[s].grape;
-              if (g == null) return null;
-              const isNearest = s === nearest;
+              if (g == null) {
+                return (
+                  <div
+                    key={s}
+                    className="flex items-center justify-between rounded-lg px-3 py-2 text-xs font-mono bg-[#0d0d18] border border-transparent"
+                  >
+                    <span className="text-[#e8e8f0]/30">設定{s}</span>
+                    <span className="text-[#e8e8f0]/20">データなし</span>
+                    <span className="text-[#e8e8f0]/20">—</span>
+                  </div>
+                );
+              }
+              const isNearest = s === nearest && result.grapeRate > 0;
               const diff = Math.abs(g - result.grapeRate);
               const diffPct = (diff / g) * 100;
               return (
@@ -79,7 +102,7 @@ export function ReverseCalcResultView({
                     1/{g.toFixed(2)}
                   </span>
                   <span className="text-[#e8e8f0]/30">
-                    {isNearest ? "最近似" : `差 ${diffPct.toFixed(1)}%`}
+                    {result.grapeRate === 0 ? "—" : isNearest ? "最近似" : `差 ${diffPct.toFixed(1)}%`}
                   </span>
                 </div>
               );

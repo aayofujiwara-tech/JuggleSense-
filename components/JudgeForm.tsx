@@ -42,6 +42,7 @@ export function JudgeForm({ machine, onSubmit }: Props) {
   const [regSoloCount, setRegSoloCount] = useState("");
   const [cherryRegCount, setCherryRegCount] = useState("");
   const [grapeCount, setGrapeCount] = useState("");
+  const [error, setError] = useState<string | null>(null);
 
   const hasRegSolo = machine.key_metrics.includes("reg_solo") ||
     Object.values(machine.settings).some((s) => s.reg_solo != null);
@@ -52,10 +53,22 @@ export function JudgeForm({ machine, onSubmit }: Props) {
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
+    const games = Number(totalGames) || 0;
+    if (games <= 0) {
+      setError("総回転数を入力してください");
+      return;
+    }
+    const big = Number(bigCount) || 0;
+    const reg = Number(regCount) || 0;
+    if (big + reg > games) {
+      setError("BIG回数とREG回数の合計が総回転数を超えています");
+      return;
+    }
+    setError(null);
     onSubmit({
-      totalGames: Number(totalGames) || 0,
-      bigCount: Number(bigCount) || 0,
-      regCount: Number(regCount) || 0,
+      totalGames: games,
+      bigCount: big,
+      regCount: reg,
       regSoloCount: regSoloCount ? Number(regSoloCount) : undefined,
       cherryRegCount: cherryRegCount ? Number(cherryRegCount) : undefined,
       grapeCount: grapeCount ? Number(grapeCount) : undefined,
@@ -80,6 +93,11 @@ export function JudgeForm({ machine, onSubmit }: Props) {
           <NumInput label="ぶどう回数（任意）" value={grapeCount} onChange={setGrapeCount} />
         )}
       </div>
+      {error && (
+        <p className="text-xs text-[#ff2d55] px-3 py-2 rounded-lg bg-[#1a0d0d] border border-[#ff2d55]/30">
+          {error}
+        </p>
+      )}
       <button
         type="submit"
         className="w-full py-4 rounded-xl font-bold text-base bg-[#ffd700] text-[#0a0a0f] transition-all active:scale-95 hover:bg-[#ffed4a] gogo-glow-yellow"
