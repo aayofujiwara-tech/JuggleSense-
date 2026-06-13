@@ -9,11 +9,11 @@
   "cherry_payout": 2,
   "settings": {
     "1": { "big": 266.4, "reg": 439.8, "bonus_total": 165.9, "reg_solo": 630.15, "cherry_reg": 1456.36, "grape": 5.94 },
-    "2": { "big": 259.0, "reg": 407.1, "reg_solo": 585.14, "cherry_reg": 1337.47, "grape": 5.92 },
+    "2": { "big": 259.0, "reg": 407.1, "bonus_total": 158.0, "reg_solo": 585.14, "cherry_reg": 1337.47, "grape": 5.92 },
     "3": { "big": 256.0, "reg": 366.1, "bonus_total": 150.7, "reg_solo": 512.00, "cherry_reg": 1285.02, "grape": 5.88 },
-    "4": { "big": 249.2, "reg": 322.8, "reg_solo": 448.88, "cherry_reg": 1149.75, "grape": 5.83 },
-    "5": { "big": 240.1, "reg": 299.3, "reg_solo": 404.54, "cherry_reg": 1149.75, "grape": 5.76 },
-    "6": { "big": 219.9, "reg": 262.1, "reg_solo": 352.34, "cherry_reg": 1024.00, "grape": 5.67 }
+    "4": { "big": 249.2, "reg": 322.8, "bonus_total": 140.4, "reg_solo": 448.88, "cherry_reg": 1149.75, "grape": 5.83 },
+    "5": { "big": 240.1, "reg": 299.3, "bonus_total": 131.4, "reg_solo": 404.54, "cherry_reg": 1149.75, "grape": 5.76 },
+    "6": { "big": 219.9, "reg": 262.1, "bonus_total": 119.6, "reg_solo": 352.34, "cherry_reg": 1024.00, "grape": 5.67 }
   },
   "source": "note(pachiprotool)/jugglertopics アプリ実測値 (確度:高)"
 }

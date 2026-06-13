@@ -9,10 +9,10 @@
   "cherry_payout": 2,
   "settings": {
     "1": { "big": 273.1, "reg": 381.0, "bonus_total": 160.0, "big_solo": 389.5, "reg_solo": 523.8, "grape": 5.98, "cherry": 33.56 },
-    "2": { "big": 270.8, "reg": 350.5, "big_solo": 383.1, "reg_solo": 485.3, "grape": 5.98, "cherry": 33.47 },
-    "3": { "big": 260.1, "reg": 316.6, "big_solo": 371.5, "reg_solo": 440.1, "grape": 5.98, "cherry": 33.21 },
-    "4": { "big": 250.1, "reg": 281.3, "big_solo": 352.4, "reg_solo": 399.2, "grape": 5.98, "cherry": 33.15 },
-    "5": { "big": 243.6, "reg": 270.8, "big_solo": 340.0, "reg_solo": 385.2, "grape": 5.88, "cherry": 33.10 },
+    "2": { "big": 270.8, "reg": 350.5, "bonus_total": 152.8, "big_solo": 383.1, "reg_solo": 485.3, "grape": 5.98, "cherry": 33.47 },
+    "3": { "big": 260.1, "reg": 316.6, "bonus_total": 142.8, "big_solo": 371.5, "reg_solo": 440.1, "grape": 5.98, "cherry": 33.21 },
+    "4": { "big": 250.1, "reg": 281.3, "bonus_total": 132.4, "big_solo": 352.4, "reg_solo": 399.2, "grape": 5.98, "cherry": 33.15 },
+    "5": { "big": 243.6, "reg": 270.8, "bonus_total": 128.2, "big_solo": 340.0, "reg_solo": 385.2, "grape": 5.88, "cherry": 33.10 },
     "6": { "big": 226.0, "reg": 252.1, "bonus_total": 114.6, "big_solo": 313.7, "reg_solo": 358.9, "grape": 5.83, "cherry": 32.97 }
   },
   "source": "juggler7.com / note(pachiprotool) 実戦値 (確度:高)。ぶどう確率の設定差は小さく、判別における優先度は低い"
