@@ -41,8 +41,7 @@ export interface JudgeInput {
 
 export interface JudgeResult {
   setting: "1" | "2" | "3" | "4" | "5" | "6";
-  scorePerMetric: Record<string, number>;
-  totalScore: number;
+  probability: number;
   brRatio?: number;
   actualValues: Record<string, number>;
 }

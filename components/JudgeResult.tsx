@@ -39,15 +39,23 @@ function formatRate(metric: string, value: number): string {
 export function JudgeResultView({
   results,
   machine,
+  totalGames,
 }: {
   results: JudgeResult[];
   machine: MachineSpec;
+  totalGames: number;
 }) {
   const sorted = [...results].sort((a, b) => Number(a.setting) - Number(b.setting));
   const best = results[0];
 
   return (
     <div className="space-y-4">
+      {totalGames < 1000 && (
+        <div className="p-3 rounded-lg bg-[#ff2d55]/10 border border-[#ff2d55]/30 text-xs text-[#ff2d55]/80">
+          総回転数が少ない場合（目安: 1000G未満）は判定の信頼度が低くなります
+        </div>
+      )}
+
       <div className="p-4 rounded-xl border border-[#ffd700]/30 bg-[#1a1a2e] gogo-glow-yellow">
         <p className="text-xs text-[#e8e8f0]/50 mb-1">最有力設定</p>
         <div className="flex items-center gap-3">
@@ -55,7 +63,7 @@ export function JudgeResultView({
             設定{best.setting}
           </span>
           <span className="text-sm text-[#ffd700]/70">
-            スコア {(best.totalScore * 100).toFixed(1)}%
+            可能性 {(best.probability * 100).toFixed(1)}%
           </span>
         </div>
       </div>
@@ -71,7 +79,7 @@ export function JudgeResultView({
 
       <div className="space-y-2">
         {sorted.map((r) => {
-          const pct = r.totalScore * 100;
+          const pct = r.probability * 100;
           const colorClass = SETTING_COLORS[Number(r.setting) - 1];
           const isBest = r.setting === best.setting;
           return (
@@ -85,30 +93,20 @@ export function JudgeResultView({
             >
               <div className="flex items-center justify-between mb-2">
                 <span className={`font-bold text-sm ${colorClass}`}>
-                  設定{r.setting}
+                  設定{r.setting}の可能性
                   {isBest && <span className="ml-1 text-xs text-[#ffd700]">★</span>}
                 </span>
                 <span className={`font-mono text-sm ${colorClass}`}>
                   {pct.toFixed(1)}%
                 </span>
               </div>
-              <div className="w-full bg-[#e8e8f0]/10 rounded-full h-2 mb-2">
+              <div className="w-full bg-[#e8e8f0]/10 rounded-full h-2">
                 <div
                   className={`h-2 rounded-full transition-all ${
                     isBest ? "bg-[#ffd700]" : "bg-[#e8e8f0]/30"
                   }`}
-                  style={{ width: `${pct}%` }}
+                  style={{ width: `${Math.min(pct, 100)}%` }}
                 />
-              </div>
-              <div className="grid grid-cols-3 gap-x-2 gap-y-0.5 text-[10px] font-mono">
-                {Object.entries(r.scorePerMetric).map(([metric, score]) => (
-                  <span key={metric} className="text-[#e8e8f0]/40">
-                    {METRIC_LABELS[metric] ?? metric}:{" "}
-                    <span className={score > 0.8 ? "text-[#39ff14]" : score > 0.5 ? "text-[#ffd700]" : "text-[#ff2d55]"}>
-                      {(score * 100).toFixed(0)}%
-                    </span>
-                  </span>
-                ))}
               </div>
             </div>
           );

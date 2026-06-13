@@ -114,11 +114,11 @@ interface MachineSpec {
   "cherry_payout": 2,
   "settings": {
     "1": { "big": 266.4, "reg": 439.8, "bonus_total": 165.9, "reg_solo": 630.15, "cherry_reg": 1456.36, "grape": 5.94 },
-    "2": { "big": 259.0, "reg": 407.1, "reg_solo": 585.14, "cherry_reg": 1337.47, "grape": 5.92 },
+    "2": { "big": 259.0, "reg": 407.1, "bonus_total": 158.0, "reg_solo": 585.14, "cherry_reg": 1337.47, "grape": 5.92 },
     "3": { "big": 256.0, "reg": 366.1, "bonus_total": 150.7, "reg_solo": 512.00, "cherry_reg": 1285.02, "grape": 5.88 },
-    "4": { "big": 249.2, "reg": 322.8, "reg_solo": 448.88, "cherry_reg": 1149.75, "grape": 5.83 },
-    "5": { "big": 240.1, "reg": 299.3, "reg_solo": 404.54, "cherry_reg": 1149.75, "grape": 5.76 },
-    "6": { "big": 219.9, "reg": 262.1, "reg_solo": 352.34, "cherry_reg": 1024.00, "grape": 5.67 }
+    "4": { "big": 249.2, "reg": 322.8, "bonus_total": 140.4, "reg_solo": 448.88, "cherry_reg": 1149.75, "grape": 5.83 },
+    "5": { "big": 240.1, "reg": 299.3, "bonus_total": 131.4, "reg_solo": 404.54, "cherry_reg": 1149.75, "grape": 5.76 },
+    "6": { "big": 219.9, "reg": 262.1, "bonus_total": 119.6, "reg_solo": 352.34, "cherry_reg": 1024.00, "grape": 5.67 }
   },
   "source": "note(pachiprotool)/jugglertopics アプリ実測値 (確度:高)"
 }
@@ -183,10 +183,10 @@ interface MachineSpec {
   "cherry_payout": 2,
   "settings": {
     "1": { "big": 273.1, "reg": 381.0, "bonus_total": 160.0, "big_solo": 389.5, "reg_solo": 523.8, "grape": 5.98, "cherry": 33.56 },
-    "2": { "big": 270.8, "reg": 350.5, "big_solo": 383.1, "reg_solo": 485.3, "grape": 5.98, "cherry": 33.47 },
-    "3": { "big": 260.1, "reg": 316.6, "big_solo": 371.5, "reg_solo": 440.1, "grape": 5.98, "cherry": 33.21 },
-    "4": { "big": 250.1, "reg": 281.3, "big_solo": 352.4, "reg_solo": 399.2, "grape": 5.98, "cherry": 33.15 },
-    "5": { "big": 243.6, "reg": 270.8, "big_solo": 340.0, "reg_solo": 385.2, "grape": 5.88, "cherry": 33.10 },
+    "2": { "big": 270.8, "reg": 350.5, "bonus_total": 152.8, "big_solo": 383.1, "reg_solo": 485.3, "grape": 5.98, "cherry": 33.47 },
+    "3": { "big": 260.1, "reg": 316.6, "bonus_total": 142.8, "big_solo": 371.5, "reg_solo": 440.1, "grape": 5.98, "cherry": 33.21 },
+    "4": { "big": 250.1, "reg": 281.3, "bonus_total": 132.4, "big_solo": 352.4, "reg_solo": 399.2, "grape": 5.98, "cherry": 33.15 },
+    "5": { "big": 243.6, "reg": 270.8, "bonus_total": 128.2, "big_solo": 340.0, "reg_solo": 385.2, "grape": 5.88, "cherry": 33.10 },
     "6": { "big": 226.0, "reg": 252.1, "bonus_total": 114.6, "big_solo": 313.7, "reg_solo": 358.9, "grape": 5.83, "cherry": 32.97 }
   },
   "source": "juggler7.com / note(pachiprotool) 実戦値 (確度:高)。ぶどう確率の設定差は小さく、判別における優先度は低い"
@@ -245,7 +245,7 @@ interface MachineSpec {
 
 ## 3. 判別エンジン仕様(機種非依存)
 
-### 3.1 設定判別ロジック
+### 3.1 設定判別ロジック(ベイズ的尤度計算)
 
 ```typescript
 interface JudgeInput {
@@ -259,18 +259,103 @@ interface JudgeInput {
 
 interface JudgeResult {
   setting: "1"|"2"|"3"|"4"|"5"|"6";
-  scorePerMetric: Record<string, number>; // 各指標の一致度(0-1)
-  totalScore: number;
+  probability: number; // 0-1、6設定の合計が1になる
   brRatio?: number;
 }
 
 function judge(machine: MachineSpec, input: JudgeInput): JudgeResult[]
 ```
 
-- 各設定について、入力値と `settings[N]` の各指標との差を正規化し、一致度スコアを算出
-- `key_metrics` に含まれる指標を重み付けして合算
-- BR比率 = REG確率の分母 / BIG確率の分母 として動的算出(データに無い場合も計算可能)
-- 結果を設定1〜6でソートし、最も一致度の高い設定をハイライト
+**統計的根拠**: 二項分布 `B(n, p)` の対数尤度に基づく。各設定`s`の理論値`p_s = 1/分母`を用い、
+
+```
+logL(s) = Σ_metric logBinomialPMF(観測回数, totalGames, p_s_metric)
+```
+
+を計算し、softmax的に正規化して6設定で合計1になる「確率」として出力する。
+
+```javascript
+// 対数ガンマ関数(Stirling近似)
+function logGamma(x) {
+  const g = 7;
+  const c = [
+    0.99999999999980993, 676.5203681218851, -1259.1392167224028,
+    771.32342877765313, -176.61502916214059, 12.507343278686905,
+    -0.13857109526572012, 9.9843695780195716e-6, 1.5056327351493116e-7
+  ];
+  if (x < 0.5) return Math.log(Math.PI / Math.sin(Math.PI * x)) - logGamma(1 - x);
+  x -= 1;
+  let a = c[0];
+  const t = x + g + 0.5;
+  for (let i = 1; i < g + 2; i++) a += c[i] / (x + i);
+  return 0.5 * Math.log(2 * Math.PI) + (x + 0.5) * Math.log(t) - t + Math.log(a);
+}
+
+function logCombination(n, k) {
+  return logGamma(n + 1) - logGamma(k + 1) - logGamma(n - k + 1);
+}
+
+// 二項分布の対数確率密度
+function logBinomialPMF(k, n, p) {
+  if (p <= 0 || p >= 1) return -Infinity;
+  return logCombination(n, k) + k * Math.log(p) + (n - k) * Math.log(1 - p);
+}
+
+function judge(machine, input) {
+  const SETTINGS = ["1","2","3","4","5","6"];
+
+  const logLikelihoods = SETTINGS.map(s => {
+    const spec = machine.settings[s];
+    let logL = 0;
+
+    if (input.bigCount > 0 && spec.big) {
+      logL += logBinomialPMF(input.bigCount, input.totalGames, 1 / spec.big);
+    }
+    if (input.regCount > 0 && spec.reg) {
+      logL += logBinomialPMF(input.regCount, input.totalGames, 1 / spec.reg);
+    }
+    if (input.regSoloCount && spec.reg_solo) {
+      logL += logBinomialPMF(input.regSoloCount, input.totalGames, 1 / spec.reg_solo);
+    }
+    if (input.cherryRegCount && spec.cherry_reg) {
+      logL += logBinomialPMF(input.cherryRegCount, input.totalGames, 1 / spec.cherry_reg);
+    }
+    if (input.grapeCount && spec.grape) {
+      logL += logBinomialPMF(input.grapeCount, input.totalGames, 1 / spec.grape);
+    }
+
+    return { setting: s, logL, brRatio: spec.big && spec.reg ? spec.reg / spec.big : undefined };
+  });
+
+  // 数値安定化のため最大値を引いてexp、正規化
+  const maxLogL = Math.max(...logLikelihoods.map(r => r.logL));
+  const expScores = logLikelihoods.map(r => Math.exp(r.logL - maxLogL));
+  const sumExp = expScores.reduce((a, b) => a + b, 0);
+
+  return logLikelihoods
+    .map((r, i) => ({
+      setting: r.setting,
+      probability: expScores[i] / sumExp,
+      brRatio: r.brRatio,
+    }))
+    .sort((a, b) => b.probability - a.probability);
+}
+```
+
+**設計上のポイント**
+
+- 入力されていない指標(未入力カウンター)はその設定・指標の計算をスキップする(現行ロジックの挙動を維持)。
+- 各設定の理論値`p_s`に対する尤度を独立事象として乗算(対数では加算)することで、入力指標が増えるほど判定が鋭くなる。
+- 総回転数(`totalGames`)が大きいほど二項分布の分散が小さくなり、わずかな理論値の差でも判定が鋭くなる。これにより「サンプル数が判定精度に影響する」という統計的に正しい性質が自然に表現される。
+- 出力`probability`は6設定の合計が1になるため、UI表示は「設定◯の可能性: ◯%」という**確率表現**として正しい。
+- `METRIC_WEIGHTS`による人為的な重み付けは廃止する。尤度計算自体が各指標の情報量を統計的に正しく反映するため不要。
+- BR比率(`brRatio`)は参考表示用としてそのまま算出する。
+
+### 3.1.1 UI表示要件の追加
+
+- `JudgeResult.tsx` には「総回転数が少ない場合(目安: 1000G未満)は判定の信頼度が低くなります」という注記を表示する。
+- 表示文言は「一致度」ではなく「設定◯の可能性: ◯%」という確率表現に統一する。
+
 
 ### 3.2 ぶどう/チェリー確率逆算ロジック
 
@@ -432,8 +517,10 @@ git init
 git add .
 git commit -m "Initial commit: JuggleSense"
 
-# 2. GitHubリポジトリ作成 & push
-gh repo create JuggleSense --public --source=. --remote=origin --push
+# 2. 既存のGitHubリポジトリをoriginとして追加 & push
+git branch -M main
+git remote add origin https://github.com/aayofujiwara-tech/JuggleSense-.git
+git push -u origin main
 
 # 3. Vercelプロジェクトとして紐付け
 vercel link --yes
@@ -442,7 +529,7 @@ vercel link --yes
 vercel --prod
 ```
 
-- `gh repo create` は `--private` も選択可能
+- リポジトリは既存の `https://github.com/aayofujiwara-tech/JuggleSense-.git` を使用する(新規作成は不要)
 - `vercel link` 実行時にプロジェクト名・スコープ(個人/チーム)を聞かれるため、`--yes` で対話をスキップしデフォルト設定を使う、または事前に `vercel.json` で設定しておく
 - 以降、`main`ブランチへのpushでVercelの自動デプロイ(Preview/Production)が有効になる(Vercel-GitHub連携がデフォルトで有効化されるため)
 

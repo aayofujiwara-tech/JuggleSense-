@@ -15,6 +15,7 @@ export default function MachinePage() {
   const machine = getMachine(machineId);
 
   const [results, setResults] = useState<JudgeResult[] | null>(null);
+  const [lastTotalGames, setLastTotalGames] = useState(0);
 
   if (!machine) {
     return (
@@ -28,6 +29,7 @@ export default function MachinePage() {
   function handleSubmit(input: JudgeInput) {
     if (input.totalGames === 0 || !machine) return;
     setResults(judge(machine, input));
+    setLastTotalGames(input.totalGames);
     setTimeout(() => {
       document.getElementById("results-section")?.scrollIntoView({ behavior: "smooth" });
     }, 50);
@@ -60,7 +62,7 @@ export default function MachinePage() {
 
       {results && (
         <div id="results-section">
-          <JudgeResultView results={results} machine={machine} />
+          <JudgeResultView results={results} machine={machine} totalGames={lastTotalGames} />
         </div>
       )}
     </div>
