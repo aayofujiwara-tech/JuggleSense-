@@ -34,7 +34,12 @@ export default function RootLayout({
             <a href="/" className="font-bold text-lg tracking-tight text-[#ffd700]">
               JuggleSense
             </a>
-            <span className="text-xs text-[#e8e8f0]/40 ml-1">ジャグラー設定判別ツール</span>
+            <span className="text-xs text-[#e8e8f0]/40 ml-1 hidden sm:inline">ジャグラー設定判別ツール</span>
+            <nav className="ml-auto">
+              <a href="/about" className="text-xs text-[#e8e8f0]/50 hover:text-[#ffd700] transition-colors">
+                計算について
+              </a>
+            </nav>
           </div>
         </header>
         <main className="flex-1 max-w-4xl w-full mx-auto px-4 py-6">
