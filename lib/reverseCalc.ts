@@ -43,7 +43,7 @@ export function reverseCalc(machine: MachineSpec, input: ReverseCalcInput): Reve
 
   const cherryPayout = actualCherryCount * machine.cherry_payout;
   const grapePayout = totalOut - bonusPayout - cherryPayout;
-  const grapeCount = grapePayout / machine.grape_payout;
+  const grapeCount = machine.grape_payout > 0 ? grapePayout / machine.grape_payout : 0;
   const grapeRate = grapeCount > 0 ? totalGames / grapeCount : 0;
 
   return {

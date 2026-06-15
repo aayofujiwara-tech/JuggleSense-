@@ -108,9 +108,11 @@ export function ReverseCalcResultView({
               );
             })}
           </div>
-          <p className="text-[10px] text-[#e8e8f0]/30 mt-2">
-            逆算値: 1/{result.grapeRate.toFixed(2)} → 設定{nearest}に最も近い
-          </p>
+          {result.grapeRate > 0 && (
+            <p className="text-[10px] text-[#e8e8f0]/30 mt-2">
+              逆算値: 1/{result.grapeRate.toFixed(2)} → 設定{nearest}に最も近い
+            </p>
+          )}
         </div>
       )}
 
